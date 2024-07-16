@@ -5,45 +5,44 @@ from openai import OpenAI
 api_key = st.secrets["OPENAI_API_KEY"]
 client = OpenAI(api_key=api_key)
 
+
 # Function to generate story based on user prompt
 def make_story(prompt):
     story_response = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": 'system',
-                "content": "you're a best seller story writer. you will take user's prompt and generate a 100 words story."
-            },
-            {
-                "role": "user",
-                "content": f'{prompt}'
-            }
-        ],
+        messages=[{
+            "role":
+            'system',
+            "content":
+            "you're a best seller story writer. you will take user's prompt and generate a 100 words story."
+        }, {
+            "role": "user",
+            "content": f'{prompt}'
+        }],
         max_tokens=1000,
-        temperature=0.8
-    )
+        temperature=0.8)
     story = story_response.choices[0].message.content
     return story
+
 
 # Function to generate cover image prompt based on generated story
 def cover_image_prompt(story):
     designed_response = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": 'system',
-                "content": "based on the story given, you will design a detailed image prompt for the cover of this story."
-            },
-            {
-                "role": "user",
-                "content": f'{story}'
-            }
-        ],
+        messages=[{
+            "role":
+            'system',
+            "content":
+            "based on the story given, you will design a detailed image prompt for the cover of this story."
+        }, {
+            "role": "user",
+            "content": f'{story}'
+        }],
         max_tokens=1000,
-        temperature=0.8
-    )
+        temperature=0.8)
     designed = designed_response.choices[0].message.content
     return designed
+
 
 # Function to generate image based on the designed prompt and style
 def make_image(desc, style="realistic"):
@@ -63,6 +62,7 @@ def make_image(desc, style="realistic"):
     )
     image_url = response.data[0].url
     return image_url
+
 
 # Main Streamlit app code
 def main():
@@ -97,7 +97,8 @@ def main():
         st.write(st.session_state.generated_story)
 
         # Choose image style
-        style = st.radio("Choose image style:", ["Realistic", "Cartoon", "Abstract"])
+        style = st.radio("Choose image style:",
+                         ["Realistic", "Cartoon", "Abstract"])
         style_mapping = {
             "Realistic": "realistic",
             "Cartoon": "cartoon",
@@ -105,9 +106,11 @@ def main():
         }
 
         if style in style_mapping:
-            image = make_image(st.session_state.cover_prompt, style=style_mapping[style])
+            image = make_image(st.session_state.cover_prompt,
+                               style=style_mapping[style])
             st.subheader(f"Generated {style} Image:")
             st.image(image, caption=f"{style} style image based on the story")
+
 
 if __name__ == "__main__":
     main()
