@@ -1,5 +1,5 @@
 
-# Project Title
+# AI Story and Image generator
 
 This is a web app that generates a story and image based on a user's prompt.
 
